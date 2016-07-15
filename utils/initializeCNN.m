@@ -35,7 +35,7 @@ net.layers{end+1} = struct('type', 'softmaxloss') ;
 
 % Meta parameters
 net.meta.inputSize = [28 28 1] ;
-net.meta.trainOpts.learningRate = 0.001 ;
+net.meta.trainOpts.learningRate = 0.0001 ;
 net.meta.trainOpts.numEpochs = 20 ;
 net.meta.trainOpts.batchSize = 100 ;
 

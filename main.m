@@ -14,11 +14,11 @@ opts = vl_argparse(opts, varargin) ;
 if ~isfield(opts.train, 'gpus'), opts.train.gpus = []; end;
 
 
-% --------------------------------------------------------------------
-%                                                         Prepare data
-% --------------------------------------------------------------------
-
-net = initializeCNN() ;
+if exist('data/mnist-baseline/mnist-cnn.mat', 'file')
+    net = load('data/mnist-baseline/mnist-cnn.mat');
+else
+    [net, info] = cnn_mnist_custom();
+end
 
 if exist(opts.imdbPath, 'file')
   imdb = load(opts.imdbPath) ;
@@ -28,22 +28,39 @@ else
   save(opts.imdbPath, '-struct', 'imdb') ;
 end
 
-net.meta.classes.name = arrayfun(@(x)sprintf('%d',x),1:10,'UniformOutput',false) ;
+% Testing
 
+idx = 1;
+predictedLabels = zeros(1, 10000);
+predictionScores = zeros(1, 10000);
+for i = 1:size(imdb.images.data, 4)
+    
+    if imdb.images.set(i) == 3
+        
+        fprintf('test image %d\n', idx);
+        
+        im = imdb.images.data(:,:,:, i);
+        
+        % run the CNN
+        res = vl_simplenn(net, im_);
+        
+        scores = squeeze(gather(res(end).x));
+        [bestScore, best] = max(scores);
+        
+        predictedLabels(idx) = best;
+        predictionScores(idx) = bestScore;
+        
+        idx = idx + 1;
+        
+    end
+    
+end
 
-% --------------------------------------------------------------------
-%                                                                Train
-% --------------------------------------------------------------------
+[correct, error, meanScore] = computeStatistics(imdb.images.labels, predictedLabels, predictionScores);
 
-[net, info] = cnn_train(net, imdb, @getBatch, ...
-  'expDir', opts.expDir, ...
-  net.meta.trainOpts, ...
-  opts.train, ...
-  'val', find(imdb.images.set == 3)) ;
-
-% Save the result for later use
-net.layers(end) = [] ;
-net.imageMean = imdb.images.data_mean ;
-save([opts.expDir, '/mnist-cnn.mat'], '-struct', 'net') ;
+fprintf('Correctle predicted %.4f\n', correct);
+fprintf('Error rate %.4f\n', error);
+fprintf('Average score %.4f\n', meanScore);
 
 end
+

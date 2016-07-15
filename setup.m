@@ -5,6 +5,7 @@ run matconvnet/matlab/vl_setupnn ;
 addpath matconvnet/examples ;
 addpath matconvnet/examples/mnist ;
 addpath utils ;
+addpath src ;
 
 opts.useGpu = false ;
 opts.verbose = false ;
