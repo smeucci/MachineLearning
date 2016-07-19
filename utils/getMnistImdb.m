@@ -1,54 +1,43 @@
-function imdb = getMnistImdb(opts)
-% --------------------------------------------------------------------
-% Prepare the imdb structure, returns image data with mean image subtracted
-% --------------------------------------------------------------------
+function [imdb] = getMnistImdb(dataDir)
+%GETMNISTIMDB Summary of this function goes here
+%   Detailed explanation goes here
 
 files = {'train-images-idx3-ubyte', ...
          'train-labels-idx1-ubyte', ...
          't10k-images-idx3-ubyte', ...
          't10k-labels-idx1-ubyte'} ;
 
-if ~exist(opts.dataDir, 'dir')
-  mkdir(opts.dataDir) ;
+if ~exist(dataDir, 'dir')
+  mkdir(dataDir) ;
 end
 
-for i=1:4
-  if ~exist(fullfile(opts.dataDir, files{i}), 'file')
-    url = sprintf('http://yann.lecun.com/exdb/mnist/%s.gz',files{i}) ;
-    fprintf('downloading %s\n', url) ;
-    gunzip(url, opts.dataDir) ;
-  end
-end
+% Load train set
+train_images = loadMNISTImages([dataDir '/' files{1,1}]);
+train_labels = loadMNISTLabels([dataDir '/' files{1,2}]);
 
-f=fopen(fullfile(opts.dataDir, 'train-images-idx3-ubyte'),'r') ;
-x1=fread(f,inf,'uint8');
-fclose(f) ;
-x1=permute(reshape(x1(17:end),28,28,60e3),[2 1 3]) ;
+train_images = reshape(train_images(:,:), 28, 28, 60e3) * 255;
+train_labels = double(train_labels(:)') + 1;
 
-f=fopen(fullfile(opts.dataDir, 't10k-images-idx3-ubyte'),'r') ;
-x2=fread(f,inf,'uint8');
-fclose(f) ;
-x2=permute(reshape(x2(17:end),28,28,10e3),[2 1 3]) ;
+% Load test set
+test_images = loadMNISTImages([dataDir '/' files{1,3}]);
+test_labels = loadMNISTLabels([dataDir '/' files{1,4}]);
 
-f=fopen(fullfile(opts.dataDir, 'train-labels-idx1-ubyte'),'r') ;
-y1=fread(f,inf,'uint8');
-fclose(f) ;
-y1=double(y1(9:end)')+1 ;
+test_images = reshape(test_images(:,:), 28, 28, 10e3) * 255;
+test_labels = double(test_labels(:)') + 1;
 
-f=fopen(fullfile(opts.dataDir, 't10k-labels-idx1-ubyte'),'r') ;
-y2=fread(f,inf,'uint8');
-fclose(f) ;
-y2=double(y2(9:end)')+1 ;
+set = [ones(1,numel(train_labels) - 5e3) 2*ones(1, 5e3) 3*ones(1,numel(test_labels))];
 
-set = [ones(1,numel(y1)) 3*ones(1,numel(y2))];
-data = single(reshape(cat(3, x1, x2),28,28,1,[]));
+data = single(reshape(cat(3, train_images, test_images),28,28,1,[]));
 dataMean = mean(data(:,:,:,set == 1), 4);
 data = bsxfun(@minus, data, dataMean) ;
+%data = cellfun(@(x) remap(x, [min(min(x)), max(max(x))], [0, 1]), {data(:,:,1,:)}, 'UniformOutput', false);
+%data = data{1, 1};
 
 imdb.images.data = data ;
 imdb.images.data_mean = dataMean;
-imdb.images.labels = cat(2, y1, y2) ;
+imdb.images.labels = cat(2, train_labels, test_labels) ;
 imdb.images.set = set ;
 imdb.meta.sets = {'train', 'val', 'test'} ;
 imdb.meta.classes = arrayfun(@(x)sprintf('%d',x),0:9,'uniformoutput',false) ;
 
+end

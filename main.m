@@ -23,12 +23,16 @@ end
 if exist(opts.imdbPath, 'file')
   imdb = load(opts.imdbPath) ;
 else
-  imdb = getMnistImdb(opts) ;
-  mkdir(opts.expDir) ;
+  imdb = getMnistImdb(opts.dataDir) ;
+  if ~exist(opts.expDir, 'dir')
+      mkdir(opts.expDir) ;
+  end
   save(opts.imdbPath, '-struct', 'imdb') ;
 end
 
 % Testing
+net2 = net;
+net2.layers(end) = [];
 
 idx = 1;
 predictedLabels = zeros(1, 10000);
@@ -42,7 +46,8 @@ for i = 1:size(imdb.images.data, 4)
         im = imdb.images.data(:,:,:, i);
         
         % run the CNN
-        res = vl_simplenn(net, im_);
+        adv = getAdversarial(net, im, 0.25);
+        res = vl_simplenn(net2, adv);
         
         scores = squeeze(gather(res(end).x));
         [bestScore, best] = max(scores);
