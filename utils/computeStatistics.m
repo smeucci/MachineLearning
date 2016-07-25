@@ -13,7 +13,9 @@ for i = 1:size(predictedLabels, 2)
         success = success + 1;
         
     else
+        
         failure = failure + 1;
+        
     end
     
 end

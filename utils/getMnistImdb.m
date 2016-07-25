@@ -15,14 +15,14 @@ end
 train_images = loadMNISTImages([dataDir '/' files{1,1}]);
 train_labels = loadMNISTLabels([dataDir '/' files{1,2}]);
 
-train_images = reshape(train_images(:,:), 28, 28, 60e3) * 255;
+train_images = reshape(train_images(:,:), 28, 28, 60e3);
 train_labels = double(train_labels(:)') + 1;
 
 % Load test set
 test_images = loadMNISTImages([dataDir '/' files{1,3}]);
 test_labels = loadMNISTLabels([dataDir '/' files{1,4}]);
 
-test_images = reshape(test_images(:,:), 28, 28, 10e3) * 255;
+test_images = reshape(test_images(:,:), 28, 28, 10e3);
 test_labels = double(test_labels(:)') + 1;
 
 set = [ones(1,numel(train_labels) - 5e3) 2*ones(1, 5e3) 3*ones(1,numel(test_labels))];
@@ -30,8 +30,8 @@ set = [ones(1,numel(train_labels) - 5e3) 2*ones(1, 5e3) 3*ones(1,numel(test_labe
 data = single(reshape(cat(3, train_images, test_images),28,28,1,[]));
 dataMean = mean(data(:,:,:,set == 1), 4);
 data = bsxfun(@minus, data, dataMean) ;
-%data = cellfun(@(x) remap(x, [min(min(x)), max(max(x))], [0, 1]), {data(:,:,1,:)}, 'UniformOutput', false);
-%data = data{1, 1};
+data = cellfun(@(x) remap(x, [min(min(x)), max(max(x))], [0, 1]), {data(:,:,1,:)}, 'UniformOutput', false);
+data = data{1, 1};
 
 imdb.images.data = data ;
 imdb.images.data_mean = dataMean;

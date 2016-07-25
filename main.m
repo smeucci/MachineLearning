@@ -31,8 +31,6 @@ else
 end
 
 % Testing
-net2 = net;
-net2.layers(end) = [];
 
 idx = 1;
 predictedLabels = zeros(1, 10000);
@@ -44,10 +42,11 @@ for i = 1:size(imdb.images.data, 4)
         fprintf('test image %d\n', idx);
         
         im = imdb.images.data(:,:,:, i);
+        labels = imdb.images.labels(i);
         
         % run the CNN
-        adv = getAdversarial(net, im, 0.25);
-        res = vl_simplenn(net2, adv);
+        im = getAdversarial(net, im, labels, 0.1);
+        res = vl_simplenn(net, im);
         
         scores = squeeze(gather(res(end).x));
         [bestScore, best] = max(scores);
@@ -63,7 +62,7 @@ end
 
 [correct, error, meanScore] = computeStatistics(imdb.images.labels, predictedLabels, predictionScores);
 
-fprintf('Correctle predicted %.4f\n', correct);
+fprintf('Correctly predicted %.4f\n', correct);
 fprintf('Error rate %.4f\n', error);
 fprintf('Average score %.4f\n', meanScore);
 

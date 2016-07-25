@@ -2,7 +2,7 @@ function [net] = initializeCNN()
 %INITIALIZECNN Summary of this function goes here
 %   Detailed explanation goes here
 
-f=1/100 ;
+f=1/10 ;
 net.layers = {} ;
 net.layers{end+1} = struct('type', 'conv', ...
                            'weights', {{f*randn(5,5,1,20, 'single'), zeros(1, 20, 'single')}}, ...
