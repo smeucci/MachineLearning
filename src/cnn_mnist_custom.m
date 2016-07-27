@@ -52,7 +52,8 @@ net.meta.classes.name = arrayfun(@(x)sprintf('%d',x),0:9,'UniformOutput',false) 
   'val', find(imdb.images.set == 2)) ;
 
 % Save the result for later use
-net.layers(end) = [] ;
+net.layers{end} = struct('type', 'softmax') ;
+net = vl_simplenn_tidy(net);
 save([opts.expDir, '/mnist-cnn.mat'], '-struct', 'net') ;
 
 end

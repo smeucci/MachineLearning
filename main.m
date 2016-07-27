@@ -39,7 +39,7 @@ for i = 1:size(imdb.images.data, 4)
     
     if imdb.images.set(i) == 3
         
-        fprintf('test image %d\n', idx);
+        fprintf('test image: %d', idx);
         
         im = imdb.images.data(:,:,:, i);
         labels = imdb.images.labels(i);
@@ -54,6 +54,8 @@ for i = 1:size(imdb.images.data, 4)
         predictedLabels(idx) = best;
         predictionScores(idx) = bestScore;
         
+        fprintf(' # label: %d - predicted: %d - score: %.4f\n', labels, best, bestScore);
+        
         idx = idx + 1;
         
     end
@@ -64,7 +66,7 @@ end
 
 fprintf('Correctly predicted %.4f\n', correct);
 fprintf('Error rate %.4f\n', error);
-fprintf('Average score %.4f\n', meanScore);
+fprintf('Average confidence %.4f\n', meanScore);
 
 end
 
