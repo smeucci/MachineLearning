@@ -2,11 +2,13 @@ function [net, info] = cnn_mnist_custom(varargin)
 %MAIN Summary of this function goes here
 %   Detailed explanation goes here
 
+
+%% Setup the environment
 setup;
 
-opts.expDir = fullfile('data', ['mnist-baseline']) ;
-[opts, varargin] = vl_argparse(opts, varargin) ;
 
+%% Parsing the training parameters
+opts.expDir = fullfile('data', ['mnist-baseline']) ;
 opts.dataDir = fullfile('data', 'mnist') ;
 opts.imdbPath = fullfile(opts.expDir, 'imdb.mat');
 opts.train = struct() ;
@@ -22,9 +24,7 @@ opts = vl_argparse(opts, varargin) ;
 if ~isfield(opts.train, 'gpus'), opts.train.gpus = []; end;
 
 
-% --------------------------------------------------------------------
-%                                                         Prepare data
-% --------------------------------------------------------------------
+%%  Prepare the data
 
 net = initializeCNN() ;
 
@@ -41,9 +41,7 @@ end
 net.meta.classes.name = arrayfun(@(x)sprintf('%d',x),0:9,'UniformOutput',false) ;
 
 
-% --------------------------------------------------------------------
-%                                                                Train
-% --------------------------------------------------------------------
+%% Training phase
 
 [net, info] = cnn_train(net, imdb, @getBatch, ...
   'expDir', opts.expDir, ...
@@ -51,9 +49,12 @@ net.meta.classes.name = arrayfun(@(x)sprintf('%d',x),0:9,'UniformOutput',false) 
   opts.train, ...
   'val', find(imdb.images.set == 2)) ;
 
-% Save the result for later use
+
+%% Save the result for later use
+
 net.layers{end} = struct('type', 'softmax') ;
 net = vl_simplenn_tidy(net);
 save([opts.expDir, '/mnist-cnn.mat'], '-struct', 'net') ;
+
 
 end
