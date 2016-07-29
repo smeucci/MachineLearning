@@ -27,7 +27,6 @@ verbose = p.Results.Verbose;
 assert(verbose == true || verbose == false, 'Error: Verbose must be a boolean');
 assert(num_testing <= defaultNumTesting, 'Error: NumTesting must NOT be greater than 10000.');
 assert(num_testing > 0, 'Error: NumTesting must be greater than 0.');
-assert(epsilon >= 0 && epsilon <= 1, 'Error: epsilon must be between 0 and 1.');
 assert(strcmp(type, 'normal') == 1 || strcmp(type, 'adversarial') == 1, ...
     'Error: Type must be either "normal" or "adversarial."');
 
@@ -78,7 +77,7 @@ for i = 1:num_testing
         im = getAdversarial(net, im, label, epsilon);
     end
     
-    res = vl_simplenn(net, im);
+    res = vl_simplenn_custom(net, im);
 
     scores = squeeze(gather(res(end).x));
     [bestScore, best] = max(scores);
