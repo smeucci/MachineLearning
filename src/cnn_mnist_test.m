@@ -43,7 +43,7 @@ if ~isfield(opts.train, 'gpus'), opts.train.gpus = []; end;
 if exist('data/mnist-baseline/mnist-cnn.mat', 'file')
     net = load('data/mnist-baseline/mnist-cnn.mat');
 else
-    [net, info] = cnn_mnist_custom();
+    [net, info] = cnn_mnist_train();
 end
 
 

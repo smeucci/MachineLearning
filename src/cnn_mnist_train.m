@@ -1,5 +1,5 @@
-function [net, info] = cnn_mnist_custom(varargin)
-%MAIN Summary of this function goes here
+function [net, info] = cnn_mnist_train(varargin)
+%CNN_MNIST_TRAIN Summary of this function goes here
 %   Detailed explanation goes here
 
 
@@ -43,7 +43,7 @@ net.meta.classes.name = arrayfun(@(x)sprintf('%d',x),0:9,'UniformOutput',false) 
 
 %% Training phase
 
-[net, info] = cnn_train(net, imdb, @getBatch, ...
+[net, info] = cnn_train_custom(net, imdb, @getBatch, ...
   'expDir', opts.expDir, ...
   net.meta.trainOpts, ...
   opts.train, ...

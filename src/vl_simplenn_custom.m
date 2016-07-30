@@ -13,6 +13,8 @@ opts.accumulate = false ;
 opts.cudnn = true ;
 opts.backPropDepth = +inf ;
 opts.skipForward = false;
+opts.eps = 0.1;
+opts.alfa = 0.5;
 opts = vl_argparse(opts, varargin);
 
 n = numel(net.layers) ;
@@ -93,7 +95,8 @@ for i=1:n
       res(i+1).x = vl_nnloss(res(i).x, l.class) ;
 
     case 'softmaxloss'
-      res(i+1).x = vl_nnsoftmaxloss(res(i).x, l.class) ;
+      %res(i+1).x = vl_nnsoftmaxloss(res(i).x, l.class) ;
+      res(i+1).x = vl_nnsoftmaxloss_custom(res(i).x, l.class, opts.eps, opts.alfa) ;
 
     case 'relu'
       if l.leak > 0, leak = {'leak', l.leak} ; else leak = {} ; end
