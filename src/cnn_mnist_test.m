@@ -77,7 +77,7 @@ for i = 1:num_testing
         im = getAdversarial(net, im, label, epsilon);
     end
     
-    res = vl_simplenn_custom(net, im);
+    res = vl_simplenn(net, im);
 
     scores = squeeze(gather(res(end).x));
     [bestScore, best] = max(scores);
