@@ -1,16 +1,13 @@
-function  Y = vl_nnsoftmaxloss_custom(X,c,eps,alfa)
+function  result = vl_nnsoftmaxloss_custom(net, res, class, i, eps, alfa)
 %VL_NNSOFTMAXLOSS_CUSTOM Summary of this function goes here
 %   Detailed explanation goes here
 
-dzdy = 1;
+Y = vl_nnsoftmax(res(i).x);
+dY = vl_nnsoftmaxloss(Y, class, 1);
+adv_res = vl_simplenn(net, res(1).x, dY, res, 'skipForward', true);
+adv_res(1).x = res(1).x + eps*sign(adv_res(1).dzdx);
+adv_res = vl_simplenn(net, adv_res(1).x);
 
-Ya = vl_nnsoftmaxloss(X, c);
-
-dYa = vl_nnsoftmaxloss(X, c, dzdy);
-
-Yb = vl_nnsoftmaxloss(X + eps*sign(dYa), c);
-
-Y = alfa*Ya + (1 - alfa)*Yb;
+result = alfa*vl_nnsoftmaxloss(res(i).x, class) + (1 - alfa)*adv_res(i+1).x;
 
 end
-
