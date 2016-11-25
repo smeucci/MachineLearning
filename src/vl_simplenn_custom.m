@@ -59,10 +59,26 @@ if nargin <= 3 || isempty(res)
     'stats', cell(1,n+1), ...
     'time', num2cell(zeros(1,n+1)), ...
     'backwardTime', num2cell(zeros(1,n+1))) ;
+  adv_res = struct(...
+    'x', cell(1,n+1), ...
+    'dzdx', cell(1,n+1), ...
+    'dzdw', cell(1,n+1), ...
+    'aux', cell(1,n+1), ...
+    'stats', cell(1,n+1), ...
+    'time', num2cell(zeros(1,n+1)), ...
+    'backwardTime', num2cell(zeros(1,n+1))) ;
 end
 
 if ~opts.skipForward
-  res(1).x = x ;  
+  res(1).x = x ;
+  
+  adv_x = x;
+  for h = 1:size(x, 4)
+      adv_x(:,:,1,h) = getAdversarial(net, adv_x(:,:,1,h), net.layers{end}.class(h), opts.eps);
+  end
+  
+  adv_res(1).x = adv_x;
+  
 end
 
 
@@ -81,31 +97,50 @@ for i=1:n
         l.opts{:}, ...
         cudnn{:}) ;
     
+      adv_res(i+1).x = vl_nnconv(adv_res(i).x, l.weights{1}, l.weights{2}, ...
+        'pad', l.pad, ...
+        'stride', l.stride, ...
+        l.opts{:}, ...
+        cudnn{:}) ;
+
     case 'pool'
       res(i+1).x = vl_nnpool(res(i).x, l.pool, ...
         'pad', l.pad, 'stride', l.stride, ...
         'method', l.method, ...
         l.opts{:}, ...
         cudnn{:}) ;
- 
+    
+      adv_res(i+1).x = vl_nnpool(adv_res(i).x, l.pool, ...
+        'pad', l.pad, 'stride', l.stride, ...
+        'method', l.method, ...
+        l.opts{:}, ...
+        cudnn{:}) ;
+
     case 'softmax'
       res(i+1).x = vl_nnsoftmax(res(i).x) ;
+      adv_res(i+1).x = vl_nnsoftmax(adv_res(i).x) ;
 
     case 'loss'
       res(i+1).x = vl_nnloss(res(i).x, l.class) ;
+      adv_res(i+1).x = vl_nnloss(adv_res(i).x, l.class) ;
 
-    case 'softmaxloss'      
-      res(i+1).x = vl_nnsoftmaxloss_custom(net, res, l.class, i, opts.eps, opts.alfa);
+    case 'softmaxloss'
+        
+      adv_res(i+1).x = vl_nnsoftmaxloss(adv_res(i).x, l.class);
+      res(i+1).x = opts.alfa*vl_nnsoftmaxloss(res(i).x, l.class) + (1 - opts.alfa)*adv_res(i+1).x ;
 
     case 'relu'
       if l.leak > 0, leak = {'leak', l.leak} ; else leak = {} ; end
       res(i+1).x = vl_nnrelu(res(i).x,[],leak{:}) ;
+      adv_res(i+1).x = vl_nnrelu(adv_res(i).x,[],leak{:}) ;
 
     case 'dropout'
       if testMode
         res(i+1).x = res(i).x ;
+        adv_res(i+1).x = adv_res(i).x ;
       else
         [res(i+1).x, res(i+1).aux] = vl_nndropout(res(i).x, 'rate', l.rate) ;
+        [adv_res(i+1).x, adv_res(i+1).aux] = vl_nndropout(adv_res(i).x, 'rate', l.rate) ;
       end
 
     otherwise
