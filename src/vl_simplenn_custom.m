@@ -124,8 +124,7 @@ for i=1:n
       res(i+1).x = vl_nnloss(res(i).x, l.class) ;
       adv_res(i+1).x = vl_nnloss(adv_res(i).x, l.class) ;
 
-    case 'softmaxloss'
-        
+    case 'softmaxloss'        
       adv_res(i+1).x = vl_nnsoftmaxloss(adv_res(i).x, l.class);
       res(i+1).x = opts.alfa*vl_nnsoftmaxloss(res(i).x, l.class) + (1 - opts.alfa)*adv_res(i+1).x ;
 
