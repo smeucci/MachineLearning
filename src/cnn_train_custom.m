@@ -265,7 +265,7 @@ for t=1:opts.batchSize:numel(subset)
     if numel(batch) == 0, continue ; end
 
     [im, labels] = state.getBatch(state.imdb, batch) ;
-
+    labels = [labels, labels]  ; %added for adversarial training
     if opts.prefetch
       if s == opts.numSubBatches
         batchStart = t + (labindex-1) + opts.batchSize ;
