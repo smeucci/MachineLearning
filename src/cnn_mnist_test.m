@@ -63,6 +63,8 @@ end
 
 predictedLabels = zeros(1, num_testing);
 predictionScores = zeros(1, num_testing);
+correctlyPredictionScores = zeros(1, num_testing);
+nonCorrectlyPredictionScores = zeros(1, num_testing);
 
 images = imdb.images.data(:,:,:,imdb.images.set == 3);
 labels = imdb.images.labels(imdb.images.set == 3);
@@ -84,16 +86,25 @@ for i = 1:num_testing
 
     predictedLabels(i) = best;
     predictionScores(i) = bestScore;
-
+    
+    if label == best
+        correctlyPredictionScores(i) = predictionScores(i);
+    else
+        nonCorrectlyPredictionScores(i) = predictionScores(i);
+    end
+    
     if verbose == true
         fprintf('test image: %d # label: %d - predicted: %d - score: %.4f\n', i, label, best, bestScore);
     end
     
 end
 
+correctlyPredictionScores = correctlyPredictionScores(correctlyPredictionScores ~= 0);
+nonCorrectlyPredictionScores = nonCorrectlyPredictionScores(nonCorrectlyPredictionScores ~= 0);
 
 %% Compute statistics about the prediction
-[correct, error, meanScore] = computeStatistics(labels(1:num_testing), predictedLabels, predictionScores);
+[correct, error, meanScore, meanCorrectScore, meanNonCorrectScore] = computeStatistics(labels(1:num_testing), ...
+    predictedLabels, predictionScores, correctlyPredictionScores, nonCorrectlyPredictionScores);
 
 
 %% Output
@@ -106,6 +117,8 @@ end
 results.correctlyPredicted = correct;
 results.errorRate = error;
 results.averageConfidence = meanScore;
+results.averageCorrectConfidence = meanCorrectScore;
+results.averageNonCorrectConfidence = meanNonCorrectScore;
 results.labels = labels(1:num_testing);
 results.predictedLabels = predictedLabels;
 results.scores = predictionScores;
@@ -120,6 +133,8 @@ end
 fprintf('Correctly predicted: %.4f\n', correct);
 fprintf('Error rate: %.4f\n', error);
 fprintf('Average confidence: %.4f\n', meanScore);
+fprintf('Average correct confidence: %.4f\n', meanCorrectScore);
+fprintf('Average non correct confidence: %.4f\n', meanNonCorrectScore);
 fprintf('---------------------------\n\n');
 
 
