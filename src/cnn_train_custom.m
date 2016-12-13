@@ -265,7 +265,9 @@ for t=1:opts.batchSize:numel(subset)
     if numel(batch) == 0, continue ; end
 
     [im, labels] = state.getBatch(state.imdb, batch) ;
-    labels = [labels, labels]  ; %added for adversarial training
+    %% added for adversarial training
+    %labels = [labels, labels]  ; %added for adversarial training
+    %%
     if opts.prefetch
       if s == opts.numSubBatches
         batchStart = t + (labindex-1) + opts.batchSize ;
@@ -289,7 +291,7 @@ for t=1:opts.batchSize:numel(subset)
       evalMode = 'test' ;
     end
     net.layers{end}.class = labels ;
-    res = vl_simplenn_custom(net, im, dzdy, res, ...
+    res = vl_simplenn_custom2(net, im, dzdy, res, ...
                       'accumulate', s ~= 1, ...
                       'mode', evalMode, ...
                       'conserveMemory', opts.conserveMemory, ...
