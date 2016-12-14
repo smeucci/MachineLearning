@@ -308,7 +308,7 @@ for t=1:opts.batchSize:numel(subset)
                       'alfa', opts.alfa) ;
 
     % accumulate errors
-    if strcmp(opts.type, 'mixed')
+    if strcmp(opts.type, 'mixed') && strcmp(evalMode, 'normal')
         labels = [labels, labels]  ; %added for mixed (clean + adversarial) training
     end
     
