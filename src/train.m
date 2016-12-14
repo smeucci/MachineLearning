@@ -22,12 +22,12 @@ opts.dataDir = fullfile('data','mnist') ;
 opts.expDir = fullfile('data','mnist-baseline') ;
 opts.imdbPath = fullfile(opts.dataDir, 'imdb.mat');
 opts.train.batchSize = 100 ;
-opts.train.numEpochs = opts.epochs ;
 opts.train.continue = true ;
 opts.train.learningRate = 0.001 ;
 opts.train.expDir = opts.expDir ;
 opts = vl_argparse(opts, varargin) ;
 if ~isfield(opts.train, 'gpus'), opts.train.gpus = []; end;
+opts.train.numEpochs = opts.epochs ;
 
 
 %%  Prepare the data
