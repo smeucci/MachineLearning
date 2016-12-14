@@ -10,6 +10,7 @@ setup;
 opts.type = 'standard'; % other option are 'adversarial' and 'mixed'
 opts.eps = 0.1;
 opts.alfa = 0.5;
+opts.epochs = 30;
 
 
 %% Parsing the training parameters
@@ -21,7 +22,7 @@ opts.dataDir = fullfile('data','mnist') ;
 opts.expDir = fullfile('data','mnist-baseline') ;
 opts.imdbPath = fullfile(opts.dataDir, 'imdb.mat');
 opts.train.batchSize = 100 ;
-opts.train.numEpochs = 20 ;
+opts.train.numEpochs = opts.epochs ;
 opts.train.continue = true ;
 opts.train.learningRate = 0.001 ;
 opts.train.expDir = opts.expDir ;
