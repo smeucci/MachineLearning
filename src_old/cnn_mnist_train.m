@@ -6,20 +6,15 @@ function [net, info] = cnn_mnist_train(varargin)
 %% Setup the environment
 setup;
 
-%% Custom parameters
-opts.type = 'standard'; % other option are 'adversarial' and 'mixed'
-opts.eps = 0.1;
-opts.alfa = 0.5;
-
 
 %% Parsing the training parameters
-opts.expDir = fullfile('data', 'mnist-baseline') ;
+opts.expDir = fullfile('data', ['mnist-baseline']) ;
 opts.dataDir = fullfile('data', 'mnist') ;
 opts.imdbPath = fullfile(opts.expDir, 'imdb.mat');
 opts.train = struct() ;
 opts.dataDir = fullfile('data','mnist') ;
 opts.expDir = fullfile('data','mnist-baseline') ;
-opts.imdbPath = fullfile(opts.dataDir, 'imdb.mat');
+opts.imdbPath = fullfile(opts.expDir, 'imdb.mat');
 opts.train.batchSize = 100 ;
 opts.train.numEpochs = 20 ;
 opts.train.continue = true ;
@@ -37,8 +32,9 @@ if exist(opts.imdbPath, 'file')
   imdb = load(opts.imdbPath) ;
 else
   imdb = getMnistImdb(opts.dataDir) ;
-  if ~exist(opts.expDir, 'dir'),  mkdir(opts.expDir) ; end
-  if ~exist(opts.dataDir, 'dir'),  mkdir(opts.dataDir) ; end
+  if ~exist(opts.expDir, 'dir')
+      mkdir(opts.expDir) ;
+  end
   save(opts.imdbPath, '-struct', 'imdb') ;
 end
 
@@ -47,14 +43,11 @@ net.meta.classes.name = arrayfun(@(x)sprintf('%d',x),0:9,'UniformOutput',false) 
 
 %% Training phase
 
-[net, info] = train(net, imdb, @getBatch, ...
-      'expDir', opts.expDir, ...
-      net.meta.trainOpts, ...
-      opts.train, ...
-      'val', find(imdb.images.set == 2), ...
-      'type', opts.type, ...
-      'eps', opts.eps, ...
-      'alfa', opts.alfa) ;
+[net, info] = cnn_train_custom(net, imdb, @getBatch, ...
+  'expDir', opts.expDir, ...
+  net.meta.trainOpts, ...
+  opts.train, ...
+  'val', find(imdb.images.set == 2)) ;
 
 
 %% Save the result for later use

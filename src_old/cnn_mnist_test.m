@@ -32,9 +32,9 @@ assert(strcmp(type, 'normal') == 1 || strcmp(type, 'adversarial') == 1, ...
 
 
 %% Parsing the training parameters
-opts.expDir = fullfile('data', 'mnist-baseline') ;
+opts.expDir = fullfile('data', ['mnist-baseline']) ;
 opts.dataDir = fullfile('data', 'mnist') ;
-opts.imdbPath = fullfile(opts.dataDir, 'imdb.mat');
+opts.imdbPath = fullfile(opts.expDir, 'imdb.mat');
 opts.train = struct() ;
 if ~isfield(opts.train, 'gpus'), opts.train.gpus = []; end;
 
@@ -75,11 +75,11 @@ for i = 1:num_testing
     label = labels(i);
 
     % Compute the adversarial example if type equals 'adversarial'
-    if strcmp(type, 'adversarial')
+    if strcmp(type, 'adversarial') == 1
         im = getAdversarial(net, im, label, epsilon);
     end
     
-    res = simplenn(net, im);
+    res = vl_simplenn(net, im);
 
     scores = squeeze(gather(res(end).x));
     [bestScore, best] = max(scores);
@@ -136,5 +136,6 @@ fprintf('Average confidence: %.4f\n', meanScore);
 fprintf('Average correct confidence: %.4f\n', meanCorrectScore);
 fprintf('Average non correct confidence: %.4f\n', meanNonCorrectScore);
 fprintf('---------------------------\n\n');
+
 
 end
