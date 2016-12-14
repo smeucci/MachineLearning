@@ -76,7 +76,7 @@ for i = 1:num_testing
 
     % Compute the adversarial example if type equals 'adversarial'
     if strcmp(type, 'adversarial')
-        im = getAdversarial(net, im, label, epsilon);
+        im = adversarial(net, im, label, epsilon);
     end
     
     res = simplenn(net, im);
