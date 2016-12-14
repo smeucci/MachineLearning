@@ -3,7 +3,7 @@ function adv = adversarial(net, im, label, eps)
 %   Detailed explanation goes here
 
 dzdy = 1;
-res = simplenn(net, im);
+res = simplenn(net, im, [], []);
 dzdx = vl_nnsoftmaxloss(res(end).x, label, dzdy);
 res = simplenn(net, im, dzdx, res, 'skipForward', true);
 

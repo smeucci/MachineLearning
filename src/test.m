@@ -79,7 +79,7 @@ for i = 1:num_testing
         im = adversarial(net, im, label, epsilon);
     end
     
-    res = simplenn(net, im);
+    res = simplenn(net, im, [], []);
 
     scores = squeeze(gather(res(end).x));
     [bestScore, best] = max(scores);
