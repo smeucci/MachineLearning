@@ -1,4 +1,4 @@
-function results = cnn_mnist_test(varargin)
+function results = test(varargin)
 %MAIN Summary of this function goes here
 %   Detailed explanation goes here
 
