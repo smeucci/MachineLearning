@@ -1,0 +1,31 @@
+\documentclass[titlepage]{article}
+%%Packages:
+\usepackage[utf8]{inputenc}
+%\usepackage[UKenglish]{babel}
+\usepackage{graphicx}
+\usepackage{subcaption}
+%\usepackage{subfigure}
+
+\usepackage{booktabs}
+\usepackage{caption}
+
+%trick to avoid floating images trespassing sections boundaries
+\usepackage[section]{placeins}
+
+
+\title{Harnessing adversarial examples}
+\author{Saverio Meucci}
+
+%% main
+\begin{document}
+
+\maketitle
+\input{main/introduction}
+\input{main/dataset}
+\input{main/cnn}
+\input{main/adversarial_examples}
+\input{main/standard_training}
+\input{main/mixed_training}
+\input{main/adversarial_training}
+
+\end{document}

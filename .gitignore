@@ -4,3 +4,11 @@
 /vlfeat/
 *.*~
 *.odt
+
+*.log
+*.aux
+*.synctex.gz
+*.toc
+*.out
+*.bbl
+*.blg

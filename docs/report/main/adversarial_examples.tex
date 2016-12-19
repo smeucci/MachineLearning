@@ -1,0 +1,12 @@
+\section{Generation of adversarial examples}
+
+Let $\theta$ be the parameters of a model, x the input to the model, y the targets associated with x (for machine learning tasks that have targets) and $J(\theta, x, y)$ be the cost used to train the neural network. 
+We can linearize the cost function around the current value of $\theta$, obtaining an optimal max-norm constrained pertubation of ,
+
+$$ \eta = \epsilon * sign(\nabla_x J(\theta, x, y)) $$
+
+The adversarial examples can thus be obtained as follow,
+
+$$ x = x + \eta $$
+
+
