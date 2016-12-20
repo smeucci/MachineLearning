@@ -1,0 +1,37 @@
+\documentclass{beamer}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{mathtools}
+\usetheme[titlepagelogo=img/firenze,% Logo for the first page
+		  language=italian,
+		  bullet=circle,
+		  color=blue,
+         ]{TorinoTh}
+\usepackage[beamer,customcolors]{hf-tikz}
+\usepackage[section]{placeins}
+\usepackage{booktabs}
+
+\definecolor{UniBlue}{RGB}{83,121,170}
+\uselanguage{italian}
+\languagepath{italian}
+\setbeamercolor{block title}{use=structure,fg=white,bg=UniBlue}
+\setbeamercolor{block body}{use=structure,fg=black,bg=white}
+
+\author{}
+\rel{{\normalsize \emph{Machine Learning}}\\\vspace{0.3cm}Saverio Meucci}
+\title{\huge Harnessing adversarial examples}
+\date{10 Gennaio 2017}
+
+\begin{document}
+
+\titlepageframe
+\input{main/introduction}
+\input{main/dataset}
+\input{main/adversarial_examples}
+\input{main/cnn}
+\input{main/standard_training}
+\input{main/mixed_training}
+\input{main/adversarial_training}
+\input{main/references}
+
+\end{document}
