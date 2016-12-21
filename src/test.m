@@ -12,15 +12,18 @@ p = inputParser;
 p.KeepUnmatched = true;
 defaultNumTesting = 10000;
 defaultType = 'normal';
+defaultModel = 'standard';
 defaultEpsilon = 0.1;
 defaultVerbose = true;
 addOptional(p, 'NumTesting', defaultNumTesting, @(x) isnumeric(x));
 addOptional(p, 'Type', defaultType, @(x) ischar(x));
+addOptional(p, 'Model', defaultModel, @(x) ischar(x));
 addOptional(p, 'Epsilon', defaultEpsilon, @(x) isnumeric(x));
 addOptional(p, 'Verbose', defaultVerbose, @(x) islogical(x));
 parse(p, varargin{:});
 num_testing = p.Results.NumTesting;
 type = p.Results.Type;
+model = p.Results.Model;
 epsilon = p.Results.Epsilon;
 verbose = p.Results.Verbose;
 
@@ -32,7 +35,15 @@ assert(strcmp(type, 'normal') == 1 || strcmp(type, 'adversarial') == 1, ...
 
 
 %% Parsing the training parameters
-opts.expDir = fullfile('data', 'mnist-baseline') ;
+suffix = '';
+if strcmp(model, 'standard')
+    suffix = '-base';
+elseif strcmp(model, 'mixed')
+    suffix = '-mix';
+elseif strcmp(model, 'adversarial')
+    suffix = '-adv';
+end
+opts.expDir = fullfile('data', ['mnist-baseline', suffix]) ;
 opts.dataDir = fullfile('data', 'mnist') ;
 opts.imdbPath = fullfile(opts.dataDir, 'imdb.mat');
 opts.train = struct() ;
@@ -40,10 +51,10 @@ if ~isfield(opts.train, 'gpus'), opts.train.gpus = []; end;
 
 
 %% Load the net or train a new one
-if exist('data/mnist-baseline/mnist-cnn.mat', 'file')
-    net = load('data/mnist-baseline/mnist-cnn.mat');
+if exist([opts.expDir, '/mnist-cnn.mat'], 'file')
+    net = load([opts.expDir, '/mnist-cnn.mat']);
 else
-    [net, info] = cnn_mnist_train();
+    [net, info] = train('type', model);
 end
 
 
