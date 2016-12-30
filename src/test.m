@@ -137,6 +137,7 @@ results.scores = predictionScores;
 fprintf('\n## Mnist Dataset Test##\n');
 fprintf('---------------------------\n');
 fprintf('Number of images: %d\n', num_testing);
+fprintf('Model: %s\n', model);
 fprintf('Type: %s\n', type);
 if strcmp(type, 'adversarial') == 1
     fprintf('Epsilon: %.2f\n', epsilon);
