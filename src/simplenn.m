@@ -8,7 +8,7 @@ function res = simplenn(net, x, dzdy, res, varargin)
 [res, opts] = simplenn_opts(net, x, dzdy, res, varargin{:});
 
 
-%% Forward %%
+%% Clean Training %%
 
 if (strcmp(opts.type, 'mixed') || strcmp(opts.type, 'adversarial')) && strcmp(opts.mode, 'normal')
     adv_res = res;
@@ -17,7 +17,7 @@ end
 res = forward(net, res, 'standard', opts);
 res = backward(net, res, dzdy, 'standard', opts);
 
-% Get adversarial examples
+%% Adversarial examples
 if (strcmp(opts.type, 'mixed') || strcmp(opts.type, 'adversarial')) && strcmp(opts.mode, 'normal')
     
     adv_res(1).x = res(1).x + opts.eps*sign(res(1).dzdx);
