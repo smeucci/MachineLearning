@@ -1,12 +1,13 @@
 \begin{tframe}{Adversarial Training}
 
-The method of training used for this case follows the one proposed by [1].
+The method of training used for this case is inspired by the one proposed by [1].
 
 \vspace{0.1in}
 
-The objective function is modified to include adversarial examples in the training phase:
-
+In [1], the objective function is modified to include adversarial examples in the training phase, by doing a weighted sum of the loss for the clean and the adversarial examples:
 $$ 	\tilde{J}(\theta, x, y) = \alpha J(\theta, x, y) + ( 1 - \alpha)J(\theta, x + \epsilon sign(\nabla_{x}J(\theta, x, y)), y) $$
+
+In the implemented method, the same principle is applied only to the computing of the gradients wrt the weights in the backpropagation, so that the direction chosen for the next step will also take into consideration adversarial examples.
 
 \end{tframe}
 

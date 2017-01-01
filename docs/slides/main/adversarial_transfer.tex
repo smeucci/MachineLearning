@@ -1,0 +1,34 @@
+\begin{tframe}{Adversarial example transfer - Error Rate}
+
+\begin{table}[]
+\centering
+\label{my-label}
+\begin{tabular}{@{}llll@{}}
+\toprule
+            & Standard & Adversarial & Mixed \\ \midrule
+Standard    & 96.64    & 34.78       & 19.75 \\ 
+Adversarial & 0.08     & 22.20       & 0.09  \\ 
+Mixed       & 0.07     & 0.10        & 14.72 \\ \bottomrule
+\end{tabular}
+\caption{Error rate when exchanging adversarial examples between models.}
+\end{table}
+
+\end{tframe}
+
+
+\begin{tframe}{Adversarial example transfer - Error Confidence}
+
+\begin{table}[]
+\centering
+\label{my-label}
+\begin{tabular}{@{}llll@{}}
+\toprule
+            & Standard & Adversarial & Mixed \\ \midrule
+Standard    & 93.89    & 75.79       & 75.26 \\ 
+Adversarial & 65.19    & 66.79       & 64.49 \\ 
+Mixed       & 69.70    & 68.05       & 70.22 \\ \bottomrule
+\end{tabular}
+\caption{Error confidence when exchanging adversarial examples between models.}
+\end{table}
+
+\end{tframe}

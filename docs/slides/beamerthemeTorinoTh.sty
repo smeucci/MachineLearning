@@ -48,9 +48,9 @@
   \ifx\beamer@torinoth@language\beamer@torinoth@italiantext%
     \renewcommand\beamer@torinoth@subject{Presentazione Tesi di Laurea}%
     \ifxetex
-      \setmainlanguage{italian}%
+      \setmainlanguage{english}%
     \else
-      \RequirePackage[italian]{babel}%
+      \RequirePackage[english]{babel}%
     \fi
   \fi%
   
@@ -68,11 +68,7 @@
    {Example in english: \protect\setsubject{Thesis Presentation}}
    }   
    \renewcommand\beamer@torinoth@subject{\@setsubject}%
-    \ifxetex
-      \setmainlanguage{\beamer@torinoth@language}%
-    \else
-      \RequirePackage[\beamer@torinoth@language]{babel}%
-    \fi%    
+       
   \fi%
 
 % General settings
