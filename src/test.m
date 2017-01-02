@@ -51,6 +51,7 @@ if ~isfield(opts.train, 'gpus'), opts.train.gpus = []; end;
 
 
 %% Load the net or train a new one
+fprintf(' - Loading the net ...\n');
 if exist([opts.expDir, '/mnist-cnn.mat'], 'file')
     net = load([opts.expDir, '/mnist-cnn.mat']);
 else
@@ -59,6 +60,7 @@ end
 
 
 %% Load the mnist dataset
+fprintf(' - Loading the dataset ...\n');
 if exist(opts.imdbPath, 'file')
   imdb = load(opts.imdbPath) ;
 else
@@ -72,46 +74,24 @@ end
 
 %% Testing
 
-predictedLabels = zeros(1, num_testing);
-predictionScores = zeros(1, num_testing);
-correctlyPredictionScores = zeros(1, num_testing);
-nonCorrectlyPredictionScores = zeros(1, num_testing);
-
 images = imdb.images.data(:,:,:,imdb.images.set == 3);
 labels = imdb.images.labels(imdb.images.set == 3);
 
-for i = 1:num_testing
-   
-    im = images(:,:,:,i);
-    label = labels(i);
+images = images(:,:,:,1:num_testing);
+labels = labels(1:num_testing);
 
-    % Compute the adversarial example if type equals 'adversarial'
-    if strcmp(type, 'adversarial')
-        im = adversarial(net, im, label, epsilon);
-    end
-    
-    res = simplenn(net, im, [], []);
-
-    scores = squeeze(gather(res(end).x));
-    [bestScore, best] = max(scores);
-
-    predictedLabels(i) = best;
-    predictionScores(i) = bestScore;
-    
-    if label == best
-        correctlyPredictionScores(i) = predictionScores(i);
-    else
-        nonCorrectlyPredictionScores(i) = predictionScores(i);
-    end
-    
-    if verbose == true
-        fprintf('test image: %d # label: %d - predicted: %d - score: %.4f\n', i, label, best, bestScore);
-    end
-    
+if strcmp(type, 'adversarial')
+    fprintf(' - Computing adversarial examples ...\n');
+    images = adversarial(net, images, labels, epsilon);
 end
+fprintf(' - Classifying ...\n');
+res = simplenn(net, images, [], []);
 
-correctlyPredictionScores = correctlyPredictionScores(correctlyPredictionScores ~= 0);
-nonCorrectlyPredictionScores = nonCorrectlyPredictionScores(nonCorrectlyPredictionScores ~= 0);
+scores = squeeze(gather(res(end).x));
+[predictionScores, predictedLabels] = max(scores);
+diff = labels - predictedLabels;
+correctlyPredictionScores = predictionScores(diff == 0);
+nonCorrectlyPredictionScores = predictionScores(diff ~= 0);
 
 %% Compute statistics about the prediction
 [correct, error, meanScore, meanCorrectScore, meanNonCorrectScore] = computeStatistics(labels(1:num_testing), ...
@@ -134,14 +114,11 @@ results.labels = labels(1:num_testing);
 results.predictedLabels = predictedLabels;
 results.scores = predictionScores;
 
-fprintf('\n## Mnist Dataset Test##\n');
+fprintf('\n\n## Mnist Dataset Test##\n');
 fprintf('---------------------------\n');
 fprintf('Number of images: %d\n', num_testing);
 fprintf('Model: %s\n', model);
 fprintf('Type: %s\n', type);
-if strcmp(type, 'adversarial') == 1
-    fprintf('Epsilon: %.2f\n', epsilon);
-end
 fprintf('Correctly predicted: %.4f\n', correct);
 fprintf('Error rate: %.4f\n', error);
 fprintf('Average confidence: %.4f\n', meanScore);
