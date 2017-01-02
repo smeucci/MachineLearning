@@ -1,6 +1,16 @@
 \begin{tframe}{Explaining adversarial examples}
 
+In many application, the precision of an individual input feature is limited [1].
 
+\vspace{0.1in}
+
+Thus, given an input $ x $ and an adversarial input $ \tilde{x} = x + \eta $, a classifier will be expected to assign the same class to both $x$ and $\tilde{x}$ so long as $ \parallel \eta \parallel_\infty < \epsilon $, where $\epsilon$ is smaller than the precision of an individual input feature, so that it will be discarded.
+
+\vspace{0.1in}
+
+Consider the dot product between a weight vector $w$ and an adversarial example $\tilde{x}$:
+$$ w^{T}\tilde{x} = w^{T}x + w^{T}\eta $$
+The adversarial perturbation causes the activation to grow linearly by $w^{T}\eta$ with the dimension of $w$. This means that for high dimensionality problems, infinitesimal changes to the input add up to one large change to the output.
 
 \end{tframe}
 
@@ -17,6 +27,7 @@ The adversarial examples can thus be obtained as follow,
 
 $$ x = x + \eta $$
 
+In the implementation, $ \epsilon $ is set to 0.1.
 
 \end{tframe}
 
