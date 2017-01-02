@@ -73,7 +73,6 @@ end
 
 
 %% Testing
-
 images = imdb.images.data(:,:,:,imdb.images.set == 3);
 labels = imdb.images.labels(imdb.images.set == 3);
 
@@ -93,13 +92,13 @@ diff = labels - predictedLabels;
 correctlyPredictionScores = predictionScores(diff == 0);
 nonCorrectlyPredictionScores = predictionScores(diff ~= 0);
 
+
 %% Compute statistics about the prediction
 [correct, error, meanScore, meanCorrectScore, meanNonCorrectScore] = computeStatistics(labels(1:num_testing), ...
     predictedLabels, predictionScores, correctlyPredictionScores, nonCorrectlyPredictionScores);
 
 
 %% Output
-
 results.numberOfImages = num_testing;
 results.type = type;
 if strcmp(type, 'adversarial') == 1
