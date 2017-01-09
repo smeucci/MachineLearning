@@ -1,10 +1,10 @@
 \begin{tframe}{Mixed Training}
 
-For this case, adversarial examples were included in the training phase. At each epoch, the adversarial example of each images were computed, given the model at that particular epoch. 
+For this case, adversarial examples were included in the training phase. At each epoch, the adversarial example of each image was computed, given the model at that particular epoch. 
 
 \vspace{0.1in}
 
-Both images, clean and adversarial, were used in the training process, similar to data augmentation. This way, both the clean example and the adversarial example participate in the optimization of the parameters of the model in order to decrease the loss.
+Both images, clean and adversarial, were used in the training process, similar to data augmentation. This way, both the clean examples and the adversarial examples participate in the optimization of the parameters of the model in order to decrease the loss.
 
 \vspace{0.1in}
 
@@ -32,7 +32,7 @@ The tests were carried out as for the standard training.
                                & Clean & Adversarial \\ \midrule
 Correctly Predicted            & 98.21 & 85.28       \\
 Error                          & 1.79  & 14.72       \\
-Confidence                     & 97.89 & 86.30       \\
+Confidence                     & 97.29 & 86.30       \\
 Correctly Predicted Confidence & 97.85 & 89.07       \\
 Error Confidence               & 66.91 & 70.22       \\ \bottomrule
 \end{tabular}

@@ -8,7 +8,7 @@ The tests carried out on the trained model were of two kinds.
 
 \vspace{0.1in}
 
-The first test was made using the 10,000 clean samples from the testing set; the second test was made using the adversarial examples, that is the same samples as the first test but with an added perturbation computed as shown previously.
+The first test was made using the 10,000 clean samples from the testing set; the second test was made using the adversarial examples, that is the same samples as the first test but with added perturbation computed as shown previously.
 
 \end{tframe}
 
@@ -29,12 +29,12 @@ The first test was made using the 10,000 clean samples from the testing set; the
                                & Clean & Adversarial \\ \midrule
 Correctly Predicted            & 98.47 & 3.36        \\
 Error                          & 1.53  & 96.64       \\
-Confidence                     & 98.59 & 93.82       \\
+Confidence                     & 98.60 & 93.82       \\
 Correctly Predicted Confidence & 99.04 & 91.67       \\
 Error Confidence               & 69.95 & 93.89       \\ \bottomrule
 \end{tabular}
 \end{table}
 
-As we can see from the results, the classification using the clean samples as test images worked great, with high prediction rate and confidence. The results for the adversarial test, however, behaved as expected, with a large percentage of misclassification with a high confidence.
+As we can see from the results, the classification using the clean samples as test images worked great, with high prediction rate and confidence. The results for the adversarial test, however, behaved as expected, with a large percentage of misclassifications with a high confidence.
 
 \end{tframe}
