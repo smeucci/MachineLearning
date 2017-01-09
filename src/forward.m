@@ -40,13 +40,6 @@ for i=1:opts.n
       if l.leak > 0, leak = {'leak', l.leak} ; else leak = {} ; end
       res(i+1).x = vl_nnrelu(res(i).x,[],leak{:}) ;
 
-    case 'dropout'
-      if testMode
-        res(i+1).x = res(i).x ;
-      else
-        [res(i+1).x, res(i+1).aux] = vl_nndropout(res(i).x, 'rate', l.rate) ;
-      end
-
     otherwise
       error('Unknown layer type ''%s''.', l.type) ;
   end

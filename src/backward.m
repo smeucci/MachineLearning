@@ -49,14 +49,6 @@ if opts.doder
           res(i).dzdx = vl_nnrelu(res(i+1).x, res(i+1).dzdx, leak{:}) ;
         end
 
-      case 'dropout'
-        if testMode
-          res(i).dzdx = res(i+1).dzdx ;
-        else
-          res(i).dzdx = vl_nndropout(res(i).x, res(i+1).dzdx, ...
-                                     'mask', res(i+1).aux) ;
-        end
-
     end % layers
 
     switch l.type
